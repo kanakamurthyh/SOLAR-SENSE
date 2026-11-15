@@ -1,8 +1,13 @@
-pandas
-numpy
-scikit-learn
-xgboost
-joblib
-matplotlib
-requests
-streamlit
+# Runtime (versions tested together; Python 3.11+)
+numpy==2.4.3
+pandas==2.3.3
+scipy==1.17.1
+pvlib==0.16.1
+xgboost==3.2.0
+requests==2.32.5
+pyarrow==23.0.1
+plotly==6.6.0
+streamlit==1.55.0
+
+# Optional: AI Analyst tab (needs ANTHROPIC_API_KEY or `ant auth login`)
+anthropic==1.11.0

@@ -1,0 +1,209 @@
+{
+  "source": "forecast",
+  "training_plants": [
+    "nrel_2107_arbuckle_ca",
+    "pvdaq_10_golden_co",
+    "pvdaq_1423_henderson_nv"
+  ],
+  "training_period": [
+    "2021-03-23 23:30:00+00:00",
+    "2024-10-31 22:30:00+00:00"
+  ],
+  "target": "AC per kWp, normalised by plant energy factor k and age (new plant, default losses)",
+  "cv": "leave-one-plant-out",
+  "cv_summary": {
+    "ml_p50": {
+      "mean_nrmse_pct": 12.28,
+      "mean_nmae_pct": 8.22,
+      "mean_coverage_p10_p90_pct": 61.1
+    },
+    "persistence_24h": {
+      "mean_nrmse_pct": 19.59,
+      "mean_nmae_pct": 11.33
+    },
+    "physics": {
+      "mean_nrmse_pct": 12.48,
+      "mean_nmae_pct": 8.16
+    }
+  },
+  "cv_per_plant": [
+    {
+      "source": "forecast",
+      "held_out_plant": "nrel_2107_arbuckle_ca",
+      "method": "ml_p50",
+      "n_hours": 14925,
+      "nrmse_pct": 12.12705762676794,
+      "nmae_pct": 8.049586459255192,
+      "mbe_pct_of_energy": -0.004918219719896033,
+      "coverage_p10_p90_pct": 47.80569514237855,
+      "pinball_mean": 0.028500039284629547
+    },
+    {
+      "source": "forecast",
+      "held_out_plant": "nrel_2107_arbuckle_ca",
+      "method": "physics",
+      "n_hours": 14925,
+      "nrmse_pct": 11.64471974151734,
+      "nmae_pct": 7.887156618178694,
+      "mbe_pct_of_energy": -0.006565476711473117,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    },
+    {
+      "source": "forecast",
+      "held_out_plant": "nrel_2107_arbuckle_ca",
+      "method": "persistence_24h",
+      "n_hours": 14775,
+      "nrmse_pct": 16.76582118905572,
+      "nmae_pct": 9.383852828848742,
+      "mbe_pct_of_energy": -0.02961168388923019,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    },
+    {
+      "source": "forecast",
+      "held_out_plant": "pvdaq_10_golden_co",
+      "method": "ml_p50",
+      "n_hours": 7148,
+      "nrmse_pct": 16.346794794638342,
+      "nmae_pct": 11.113402120139915,
+      "mbe_pct_of_energy": 1.4686576659793449,
+      "coverage_p10_p90_pct": 57.848349188584216,
+      "pinball_mean": 0.037256035211306236
+    },
+    {
+      "source": "forecast",
+      "held_out_plant": "pvdaq_10_golden_co",
+      "method": "physics",
+      "n_hours": 7148,
+      "nrmse_pct": 17.274020426398245,
+      "nmae_pct": 11.68404106357091,
+      "mbe_pct_of_energy": 0.0032887533433445526,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    },
+    {
+      "source": "forecast",
+      "held_out_plant": "pvdaq_10_golden_co",
+      "method": "persistence_24h",
+      "n_hours": 7084,
+      "nrmse_pct": 28.3707598169255,
+      "nmae_pct": 17.49157178635755,
+      "mbe_pct_of_energy": -0.49680483394228814,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    },
+    {
+      "source": "forecast",
+      "held_out_plant": "pvdaq_1423_henderson_nv",
+      "method": "ml_p50",
+      "n_hours": 4771,
+      "nrmse_pct": 8.380101020856888,
+      "nmae_pct": 5.50419113686283,
+      "mbe_pct_of_energy": 3.7144489408173387,
+      "coverage_p10_p90_pct": 77.71955564871095,
+      "pinball_mean": 0.01727066850982369
+    },
+    {
+      "source": "forecast",
+      "held_out_plant": "pvdaq_1423_henderson_nv",
+      "method": "physics",
+      "n_hours": 4771,
+      "nrmse_pct": 8.535570469205208,
+      "nmae_pct": 4.9163406334158735,
+      "mbe_pct_of_energy": -0.0008424127210915344,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    },
+    {
+      "source": "forecast",
+      "held_out_plant": "pvdaq_1423_henderson_nv",
+      "method": "persistence_24h",
+      "n_hours": 4583,
+      "nrmse_pct": 13.63203409715883,
+      "nmae_pct": 7.1268690295345465,
+      "mbe_pct_of_energy": 0.08015700406418524,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    }
+  ],
+  "skill_vs_physics_pct": 1.6,
+  "plant_energy_factor_k": {
+    "nrel_2107_arbuckle_ca": 0.9083,
+    "pvdaq_10_golden_co": 0.923,
+    "pvdaq_1423_henderson_nv": 0.9886
+  },
+  "k_mean": 0.94,
+  "k_median": 0.923,
+  "k_std": 0.0428,
+  "band_calibration": {
+    "method": "Mondrian conformal on clear-sky-index bins, leave-one-plant-out predictions",
+    "hourly_csi_bins": [
+      0.0,
+      0.3,
+      0.6,
+      0.8,
+      0.9,
+      1.6
+    ],
+    "hourly_scales": {
+      "0": 3.85,
+      "1": 2.05,
+      "2": 2.0,
+      "3": 1.75,
+      "4": 3.35
+    },
+    "band_scale": 3.0,
+    "hourly_coverage_pct": 80.2,
+    "daily_csi_bins": [
+      0.0,
+      0.5,
+      0.75,
+      0.9,
+      1.6
+    ],
+    "daily_scales": {
+      "0": 1.3,
+      "1": 1.05,
+      "2": 0.75,
+      "3": 1.45
+    },
+    "daily_band_scale": 1.35,
+    "daily_coverage_pct": 80.3,
+    "uncalibrated_coverage_pct": 50.2
+  },
+  "skill_vs_persistence_pct": 37.3,
+  "physics_skill_vs_persistence_pct": 36.3,
+  "features": [
+    "phys_ac_pu",
+    "phys_dc_pu",
+    "poa_kwm2",
+    "ghi_kwm2",
+    "dni_kwm2",
+    "diffuse_fraction",
+    "clearsky_index",
+    "solar_elevation",
+    "cos_aoi",
+    "temp_air",
+    "temp_cell",
+    "wind_speed",
+    "cloud_cover",
+    "relative_humidity",
+    "ac_limit_pu"
+  ],
+  "quantiles": [
+    0.1,
+    0.5,
+    0.9
+  ],
+  "n_train_rows": 26844,
+  "lead_day_error_ratio": {
+    "0": 1.0,
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.015,
+    "4": 1.065,
+    "5": 1.094,
+    "6": 1.098
+  }
+}

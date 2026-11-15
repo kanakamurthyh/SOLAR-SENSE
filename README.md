@@ -1,172 +1,107 @@
-# SolarSense
+# ☀️ SolarSense
 
-**Solar Plant Feasibility Analysis & Power Forecasting**
+**Physics-first, real-plant-calibrated solar energy yield assessment and probabilistic forecasting for India.**
 
-`Python` · `XGBoost` · `Streamlit` · `Open-Meteo API` · `NASA POWER API`
+`pvlib` · `XGBoost quantile regression` · `conformal prediction` · `ERA5 / Open-Meteo` · `NREL PVDAQ` · `Streamlit` · `Claude tool use`
 
----
+SolarSense answers three questions for any location:
 
-## Overview
+| Question | Answer you get |
+|---|---|
+| **How much energy will this site produce?** | P50 / P90 annual energy from 10 years of hourly weather, specific yield, CUF, performance ratio, loss waterfall, monthly profile, uncertainty budget, and a VIABLE / MARGINAL / NOT VIABLE energy verdict with reasons |
+| **What will my plant produce this week?** | Hourly and daily P10 / P50 / P90 forecast with uncertainty bands calibrated on real plants |
+| **Where in India is best?** | A 36-city atlas: yield ranking, monsoon dip, optimal tilt, side-by-side comparison |
 
-SolarSense is a machine learning-powered decision support tool that answers two fundamental questions for anyone evaluating a solar investment:
-
-- **Is this location viable?** Historical climate analysis using 10 years of NASA POWER satellite data to estimate annual energy output, capacity factor, and financial payback period.
-- **How much will it produce this week?** Real-time 7-day operational forecast using Open-Meteo hourly weather data fed through the trained ML model.
-
-The tool works for any location on Earth, supports any plant capacity, and delivers a **GO / MARGINAL / NOT VIABLE** verdict with full financial projection including payback period and 25-year P&L.
-
----
-
-## Model Performance
-
-Trained on two Indian utility-scale solar plants (34 days, 3,507 rows after inverter aggregation).
-
-| Metric | XGBoost | Linear Regression (baseline) |
-|---|---|---|
-| R² Score | **0.9257** | 0.8728 |
-| nRMSE | **6.62%** | 8.66% |
-| Skill Score | **67.4%** | 57.3% |
-
-> **Key finding:** Inverter aggregation was the critical preprocessing fix. Aggregating 22 inverters per timestamp from per-inverter (~75 kW) to whole-plant (~29,000 kW) eliminated data inconsistency and lifted R² from 0.76 to 0.93.
+An optional **AI Analyst** (Claude) answers questions like *"Which yields more for 5 MW, Bikaner or Coimbatore?"* by calling SolarSense's own engines. It may only quote numbers those tools return.
 
 ---
 
-## Project Structure
+## How it works
 
 ```
-SolarSense/
-├── data/
-│   ├── Plant_1_Generation_Data.csv
-│   ├── Plant_1_Weather_Sensor_Data.csv
-│   ├── Plant_2_Generation_Data.csv
-│   ├── Plant_2_Weather_Sensor_Data.csv
-│   └── merged_clean.csv                  ← auto-generated on first run
-├── src/
-│   ├── config.py                         ← all constants and settings
-│   ├── model.py                          ← train, save, load, predict
-│   ├── api.py                            ← Open-Meteo + NASA POWER calls
-│   ├── feasibility.py                    ← GO/NO-GO decision engine
-│   ├── evaluate.py                       ← metrics and chart functions
-│   ├── test.py                           ← terminal test for any location
-│   └── utils/
-│       ├── preprocessing.py              ← full data pipeline
-│       └── eda.ipynb                     ← exploratory data analysis
-├── models/
-│   ├── xgboost_model.pkl                 ← saved after training
-│   └── metadata.json
-├── app/
-│   └── app.py                            ← Streamlit application
-└── requirements.txt
+                 ┌──────────────── weather (UTC, W/m², validated in one place) ────────────────┐
+                 │  ERA5 reanalysis via Open-Meteo (10 yr)  ·  NASA POWER fallback  ·  NWP forecast │
+                 └──────────────────────────────────────┬──────────────────────────────────────┘
+                                                        ▼
+  PHYSICS (pvlib)   solar position → Perez POA → IAM → Faiman cell temp → PVWatts DC → loss chain → inverter + clipping
+                                                        ▼
+  REAL-PLANT        × k = measured ÷ physics on 5 metered NREL plants (age- and nameplate-corrected)
+  CALIBRATION       spread of k across plants = energy uncertainty for a new plant
+                                                        ▼
+  UNCERTAINTY       quantile XGBoost half-widths × Mondrian conformal scale (per clear-sky-index bin)
+  (ML)              × measured error growth by forecast lead day
+                                                        ▼
+  OUTPUTS           P50/P90 energy · loss waterfall · uncertainty budget · verdict · P10–P90 forecast
 ```
 
----
+**Why physics first?** I trained ML models on 99,909 real daylight hours to predict output directly. Out of sample they were **no better than pvlib** (−1.9 % to +1.6 % hourly nRMSE). So physics gives the central estimate, and the ML does what physics can't: calibrated uncertainty.
 
-## What Each File Does
+## Validation (all out-of-sample)
 
-### `src/config.py`
-Single source of truth for all constants — file paths, feature list, model hyperparameters, API URLs, and feasibility thresholds. Every other file imports from here. Nothing is hardcoded elsewhere.
+| Test | Result |
+|---|---|
+| Physics vs PVGIS, 36 Indian cities (same system, no losses) | mean **+4.6 %**, MAE 5.4 %, monthly-shape correlation 0.97 |
+| Weather-source spread (two ERA5 processing chains, plane-of-array) | **4.1 %** (1σ), used in P90 |
+| Physics vs **real metered output**, 5 US plants (BWh desert, Csa, BSk) | measured ÷ physics **k = 0.964 ± 5.2 %**, now applied as a calibration |
+| 7-day forecast vs 24 h persistence (leave-one-plant-out) | **36 % lower error** (hourly nRMSE 12.5 % of capacity) |
+| P10–P90 band coverage on unseen plants | raw ML 50–54 % → **80 % after conformal calibration** (hourly *and* daily) |
+| Forecast error growth with lead time (Open-Meteo previous runs) | day 6 is **+10 %** vs day 0 (floor of +5 %/day applied for cloudier climates) |
 
-### `src/utils/preprocessing.py`
-Full data pipeline in one place. Loads both Kaggle plant CSVs, aggregates all inverters per timestamp into whole-plant totals, cleans data (drops nighttime rows, negative power, outliers), engineers all 10 features, and applies a date-based 80/20 split. Saves `merged_clean.csv` on first run so subsequent runs skip reprocessing. The `prepare_inference_data()` function applies identical feature engineering to Open-Meteo forecast data, guaranteeing training and inference always use the same feature computation.
+Reports live in [`reports/`](reports/) and in the app's **Model & Validation** tab. The model cards are [`models/*_model_card.json`](models/).
 
-### `src/model.py`
-Trains Linear Regression (baseline) and XGBoost with early stopping, compares R², and saves the better model to `models/`. Exposes `load_model()` and `predict()` for inference.
+**Example: Jaipur, 1 MWp fixed tilt, DC/AC 1.25.** P50 is 1,539 kWh/kWp/yr and P90 is 1,406. CUF (AC) is 22.0 % and performance ratio 0.74. Verdict: **VIABLE** (P50 ≥ 1,500 kWh/kWp).
 
-### `src/api.py`
-All external API calls in one place. `get_forecast()` fetches 7-day hourly weather from Open-Meteo. `get_historical()` fetches 10-year monthly climate averages from the NASA POWER climatology endpoint. Both are free with no API key required.
+## Quick start
 
-### `src/feasibility.py`
-The core decision engine. `run_feasibility()` builds synthetic typical days from NASA POWER GHI data, converts daily energy (kWh/m²/day) to hourly instantaneous irradiance using a bell-curve solar model, runs model predictions for all 12 months, computes annual output and capacity factor, and returns a GO/MARGINAL/NOT VIABLE verdict with financial breakdown. `run_forecast()` handles 7-day operational prediction.
-
-### `src/evaluate.py`
-Computes MAE, RMSE, nRMSE, R², and skill score vs a persistence baseline. All chart functions return matplotlib Figure objects that Streamlit renders directly.
-
-### `src/test.py`
-Terminal test script. Edit `LAT`, `LON`, `CAPACITY_KW`, `COST_INR`, `TARIFF` at the top and run without the UI. Prints 7-day forecast and monthly output table directly to terminal.
-
-### `app/app.py`
-Streamlit application with three tabs. **Feasibility Analysis** shows monthly output chart, month-by-month detail table, verdict banner, 25-year P&L projection, and financial summary. **7-Day Forecast** shows daily bar chart, hourly curve for the best day, and a day-by-day detail table. **Model Diagnostics** shows performance metrics, feature importance chart, and model comparison table. All numerical output uses IBM Plex Mono for readability.
-
----
-
-## Engineered Features
-
-All 10 features derived from 3 raw sensor inputs and the timestamp:
-
-| Feature | Source | Description |
-|---|---|---|
-| `IRRADIATION` | Raw sensor | Instantaneous solar irradiance — strongest predictor |
-| `AMBIENT_TEMPERATURE` | Raw sensor | Air temperature at 2m |
-| `MODULE_TEMPERATURE` | Raw / estimated | Panel surface temp; estimated via Sandia model at inference |
-| `temp_delta` | Derived | Panel temp minus air temp; high delta signals efficiency loss |
-| `irradiation_sq` | Derived | Captures non-linear curve in irradiance vs output |
-| `irr_x_temp` | Derived | Interaction term between irradiance and temperature |
-| `hour_sin`, `hour_cos` | Time | Cyclic hour encoding; hour 23 and hour 0 are adjacent |
-| `month_sin`, `month_cos` | Time | Cyclic seasonal encoding |
-| `day_of_year` | Time | Captures gradual seasonal sun-path shift |
-| `PLANT_ID` | Metadata | Per-plant differences in tilt, shading, inverter efficiency |
-
----
-
-## Setup
-
-**1. Install dependencies**
 ```bash
 pip install -r requirements.txt
-```
-
-**2. Download dataset** — place all 4 CSV files in `data/`
-```
-https://www.kaggle.com/datasets/anikannal/solar-power-generation-data
-```
-
-**3. Train the model**
-```bash
-cd src
-python model.py
-```
-
-**4. Launch the app**
-```bash
 streamlit run app/app.py
 ```
 
-**5. Test any location from terminal**
+The trained models, model cards, reports, atlas and real-plant dataset are committed, so the app works straight away. Weather is fetched on demand and cached in `cache/`.
+
+**Rebuild everything from public data:**
+
 ```bash
-cd src
-python test.py
+make data       # NREL real plants + India ERA5 archive + PVGIS reference (~20 min, cached)
+make train      # training set → leave-one-plant-out CV → models + cards → lead-time analysis
+make validate   # golden test vs PVGIS on 36 cities
+make atlas      # India atlas
+make test       # 29 offline tests (pytest -m network for live API smoke tests)
 ```
 
----
+**Docker:** `docker build -t solarsense . && docker run -p 8501:8501 solarsense`
 
-## How the Pipeline Works
+**AI Analyst (optional):** `pip install anthropic`, then `export ANTHROPIC_API_KEY=...` (or `ant auth login`). It uses `claude-opus-5-5` with server-side refusal fallback.
 
-**Feasibility Analysis (Historical)**
-1. Fetch 10-year monthly GHI and temperature averages from NASA POWER
-2. Convert daily GHI (kWh/m²/day) to hourly instantaneous irradiance: `peak_irr = (π/2) × GHI / daylight_hours`
-3. Run trained model on synthetic typical days for all 12 months
-4. Aggregate to monthly kWh → annual output → capacity factor → payback period
-5. Verdict threshold: capacity factor ≥ 18% and payback ≤ 10 years → VIABLE
-
-**Operational Forecast (7-Day)**
-1. Fetch hourly weather from Open-Meteo for the target location
-2. Apply identical feature engineering as training
-3. Scale predictions by capacity ratio (user plant / training plant)
-4. Output daily totals, hourly curve, and day-by-day breakdown
-
----
-
-## Dataset Note
-
-Training covers May–June 2020 only (34 days, 2 Indian plants). A full-year dataset would push R² from 0.93 to ~0.97 by adding seasonal variation. Module temperature is estimated at inference via the Sandia simplified model since Open-Meteo does not provide panel surface temperature.
-
----
-
-## Requirements
+## Project layout
 
 ```
-pandas · numpy · scikit-learn · xgboost · joblib · matplotlib · requests · streamlit
+solarsense/          core package
+  config.py          paths, physical defaults, verdict thresholds, uncertainty constants
+  weather.py         Open-Meteo (ERA5, forecast, historical forecast), NASA POWER; WeatherFrame contract
+  physics.py         pvlib simulation, loss waterfall, tilt optimiser
+  ml.py              feature contract, quantile XGBoost wrapper, metrics
+  calibration.py     real-plant k, conformal band scales, lead-time factors (from model cards)
+  feasibility.py     P50/P90, uncertainty budget, monthly profile, verdict
+  forecast.py        7-day P10/P50/P90
+  agent.py           Claude tool-use analyst
+training/            real-plant training set, LOPO CV + conformal calibration, lead-time study
+scripts/             data builders (NREL PVDAQ, Open-Meteo archive, PVGIS), golden test, atlas
+app/                 Streamlit UI
+tests/               offline unit + pipeline tests, network smoke tests
+data/ models/ reports/
 ```
 
+See [`data/README.md`](data/README.md) for every dataset, its source and licence, and [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) for the full technical write-up.
+
+## Limitations (honest list)
+
+- **No Indian plant measurements yet.** Calibration uses 5 US plants (3 for forecasting). The Nevada desert sites are good analogues for Rajasthan, but monsoon-cloud behaviour is not represented. The only multi-year Indian plant dataset found (IEEE DataPort, Karnataka 72 kWp) is paywalled.
+- **Forecast bands are likely conservative for clear dry-season Indian days.** They are calibrated on plants that include Colorado convection and California tule fog.
+- Archived forecasts used for training are mostly short-lead. Lead-time growth was measured at one plant.
+- Energy only by design: no costs, tariffs or returns. The verdict is based on specific yield alone.
+
 ---
-DEVELOPED BY KANAKAMURTHY H, Kanakamurthyh@gmail.com, 24B2151@iitb.ac.in, IIT BOMBAY. 
+
+Developed by **Kanakamurthy H**, IIT Bombay · Data: Open-Meteo (ERA5 © ECMWF, CC-BY 4.0), NASA POWER, NREL PVDAQ (CC-BY 4.0), PVGIS (© EU) · Physics: [pvlib](https://pvlib-python.readthedocs.io)

@@ -1,0 +1,209 @@
+{
+  "source": "hindcast",
+  "training_plants": [
+    "nrel_2107_arbuckle_ca",
+    "pvdaq_10_golden_co",
+    "pvdaq_1423_henderson_nv",
+    "pvdaq_34_las_vegas_nv",
+    "pvdaq_35_las_vegas_nv"
+  ],
+  "training_period": [
+    "2015-01-01 15:30:00+00:00",
+    "2024-10-31 23:30:00+00:00"
+  ],
+  "target": "AC per kWp, normalised by plant energy factor k and age (new plant, default losses)",
+  "cv": "leave-one-plant-out",
+  "cv_summary": {
+    "ml_p50": {
+      "mean_nrmse_pct": 11.07,
+      "mean_nmae_pct": 6.87,
+      "mean_coverage_p10_p90_pct": 67.9
+    },
+    "physics": {
+      "mean_nrmse_pct": 10.86,
+      "mean_nmae_pct": 6.92
+    }
+  },
+  "cv_per_plant": [
+    {
+      "source": "hindcast",
+      "held_out_plant": "nrel_2107_arbuckle_ca",
+      "method": "ml_p50",
+      "n_hours": 28306,
+      "nrmse_pct": 12.955604583021001,
+      "nmae_pct": 8.71474105383442,
+      "mbe_pct_of_energy": 3.0398999959286854,
+      "coverage_p10_p90_pct": 50.11658305659578,
+      "pinball_mean": 0.03063030393685476
+    },
+    {
+      "source": "hindcast",
+      "held_out_plant": "nrel_2107_arbuckle_ca",
+      "method": "physics",
+      "n_hours": 28306,
+      "nrmse_pct": 12.146366957665142,
+      "nmae_pct": 8.424555475618616,
+      "mbe_pct_of_energy": -0.03217355935151156,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    },
+    {
+      "source": "hindcast",
+      "held_out_plant": "pvdaq_10_golden_co",
+      "method": "ml_p50",
+      "n_hours": 12032,
+      "nrmse_pct": 16.1609340850786,
+      "nmae_pct": 11.116173849343456,
+      "mbe_pct_of_energy": 3.3454682238236666,
+      "coverage_p10_p90_pct": 60.35571808510638,
+      "pinball_mean": 0.03781645202423405
+    },
+    {
+      "source": "hindcast",
+      "held_out_plant": "pvdaq_10_golden_co",
+      "method": "physics",
+      "n_hours": 12032,
+      "nrmse_pct": 16.3820186264143,
+      "nmae_pct": 11.670444378439857,
+      "mbe_pct_of_energy": -0.009240197966997599,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    },
+    {
+      "source": "hindcast",
+      "held_out_plant": "pvdaq_1423_henderson_nv",
+      "method": "ml_p50",
+      "n_hours": 4771,
+      "nrmse_pct": 8.714763044550613,
+      "nmae_pct": 5.412826569690102,
+      "mbe_pct_of_energy": 6.990997251537268,
+      "coverage_p10_p90_pct": 91.00817438692098,
+      "pinball_mean": 0.017767697860948523
+    },
+    {
+      "source": "hindcast",
+      "held_out_plant": "pvdaq_1423_henderson_nv",
+      "method": "physics",
+      "n_hours": 4771,
+      "nrmse_pct": 7.681320199036083,
+      "nmae_pct": 4.354325225466414,
+      "mbe_pct_of_energy": -0.0003336127955222423,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    },
+    {
+      "source": "hindcast",
+      "held_out_plant": "pvdaq_34_las_vegas_nv",
+      "method": "ml_p50",
+      "n_hours": 16450,
+      "nrmse_pct": 8.13976553579385,
+      "nmae_pct": 4.800171808120069,
+      "mbe_pct_of_energy": 1.9020644386235963,
+      "coverage_p10_p90_pct": 63.045592705167174,
+      "pinball_mean": 0.016824070176359833
+    },
+    {
+      "source": "hindcast",
+      "held_out_plant": "pvdaq_34_las_vegas_nv",
+      "method": "physics",
+      "n_hours": 16450,
+      "nrmse_pct": 8.418746858158475,
+      "nmae_pct": 5.0947303615919415,
+      "mbe_pct_of_energy": -0.029048598988135055,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    },
+    {
+      "source": "hindcast",
+      "held_out_plant": "pvdaq_35_las_vegas_nv",
+      "method": "ml_p50",
+      "n_hours": 11506,
+      "nrmse_pct": 9.379851500162946,
+      "nmae_pct": 4.316125253974523,
+      "mbe_pct_of_energy": 3.0712011129946815,
+      "coverage_p10_p90_pct": 75.10863897097167,
+      "pinball_mean": 0.0153192575543771
+    },
+    {
+      "source": "hindcast",
+      "held_out_plant": "pvdaq_35_las_vegas_nv",
+      "method": "physics",
+      "n_hours": 11506,
+      "nrmse_pct": 9.65241952989112,
+      "nmae_pct": 5.060005616390409,
+      "mbe_pct_of_energy": -0.029907812987084448,
+      "coverage_p10_p90_pct": NaN,
+      "pinball_mean": NaN
+    }
+  ],
+  "skill_vs_physics_pct": -1.9,
+  "plant_energy_factor_k": {
+    "nrel_2107_arbuckle_ca": 0.9208,
+    "pvdaq_10_golden_co": 0.936,
+    "pvdaq_1423_henderson_nv": 1.0511,
+    "pvdaq_34_las_vegas_nv": 0.9422,
+    "pvdaq_35_las_vegas_nv": 0.9696
+  },
+  "k_mean": 0.9639,
+  "k_median": 0.9422,
+  "k_std": 0.0518,
+  "band_calibration": {
+    "method": "Mondrian conformal on clear-sky-index bins, leave-one-plant-out predictions",
+    "hourly_csi_bins": [
+      0.0,
+      0.3,
+      0.6,
+      0.8,
+      0.9,
+      1.6
+    ],
+    "hourly_scales": {
+      "0": 5.7,
+      "1": 1.45,
+      "2": 1.45,
+      "3": 1.6,
+      "4": 2.75
+    },
+    "band_scale": 2.45,
+    "hourly_coverage_pct": 80.2,
+    "daily_csi_bins": [
+      0.0,
+      0.5,
+      0.75,
+      0.9,
+      1.6
+    ],
+    "daily_scales": {
+      "0": 1.15,
+      "1": 0.8,
+      "2": 0.9,
+      "3": 1.35
+    },
+    "daily_band_scale": 1.2,
+    "daily_coverage_pct": 81.2,
+    "uncalibrated_coverage_pct": 53.6
+  },
+  "features": [
+    "phys_ac_pu",
+    "phys_dc_pu",
+    "poa_kwm2",
+    "ghi_kwm2",
+    "dni_kwm2",
+    "diffuse_fraction",
+    "clearsky_index",
+    "solar_elevation",
+    "cos_aoi",
+    "temp_air",
+    "temp_cell",
+    "wind_speed",
+    "cloud_cover",
+    "relative_humidity",
+    "ac_limit_pu"
+  ],
+  "quantiles": [
+    0.1,
+    0.5,
+    0.9
+  ],
+  "n_train_rows": 73065
+}

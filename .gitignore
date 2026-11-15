@@ -1,0 +1,17 @@
+# Python / OS
+__pycache__/
+*.py[cod]
+.DS_Store
+.pytest_cache/
+.ruff_cache/
+
+# API response cache (rebuilt automatically)
+cache/
+
+# Local backups
+.backup/
+
+# Large generated datasets (regenerate with `make data` / `make train`)
+data/india_pvgis_hourly.csv
+data/india_openmeteo_hourly_*.csv
+data/training_set.parquet

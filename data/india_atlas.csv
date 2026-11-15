@@ -1,0 +1,37 @@
+rank,location_id,city,state,region,latitude,longitude,ghi_kwh_m2,specific_yield_p50,cuf_ac_pct,best_month,worst_month,monsoon_dip_pct,mean_cell_temp_c,default_tilt,optimal_tilt,optimal_tilt_gain_pct
+1,leh,Leh,Ladakh,Himalayan,34.1526,77.5771,2132,1915,27.32,Mar,Dec,-5.4,26.8,30.7,32,0.04
+2,jaisalmer,Jaisalmer,Rajasthan,Northwest,26.9157,70.9083,1963,1624,23.18,Mar,Jul,-9.2,41.8,24.2,32,0.4
+3,shimla,Shimla,Himachal Pradesh,Himalayan,31.1048,77.1734,1759,1572,22.44,Mar,Jul,-14.1,28.8,28.0,32,0.34
+4,bikaner,Bikaner,Rajasthan,Northwest,28.0229,73.3119,1871,1557,22.22,Mar,Jul,-8.9,42.5,25.2,32,0.46
+5,ahmedabad,Ahmedabad,Gujarat,West,23.0225,72.5714,1918,1542,22.0,Mar,Aug,-27.2,43.5,20.7,28,0.7
+6,surat,Surat,Gujarat,West,21.1702,72.8311,1915,1530,21.83,Mar,Jul,-29.0,41.7,19.1,28,0.59
+7,jaipur,Jaipur,Rajasthan,Northwest,26.9124,75.7873,1826,1519,21.67,Mar,Jul,-15.0,41.6,24.2,32,0.58
+8,chennai,Chennai,Tamil Nadu,South,13.0827,80.2707,1986,1511,21.56,Mar,Nov,-8.0,40.4,11.8,16,0.18
+9,bengaluru,Bengaluru,Karnataka,South,12.9716,77.5946,1945,1502,21.43,Mar,Jul,-19.8,36.6,11.7,16,0.39
+10,bhopal,Bhopal,Madhya Pradesh,Central,23.2599,77.4126,1847,1500,21.4,Mar,Aug,-27.8,40.8,20.9,28,0.71
+11,ranchi,Ranchi,Jharkhand,East,23.3441,85.3096,1820,1498,21.37,Mar,Jun,-24.5,38.1,21.0,28,0.73
+12,anantapur,Anantapur,Andhra Pradesh,South,14.6819,77.6006,1959,1498,21.37,Mar,Jul,-15.4,41.2,13.2,20,0.38
+13,delhi,Delhi,Delhi,North,28.6139,77.209,1780,1495,21.33,Mar,Jul,-10.8,40.5,25.8,32,0.43
+14,visakhapatnam,Visakhapatnam,Andhra Pradesh,South,17.6868,83.2185,1901,1492,21.29,Mar,Jul,-14.6,39.7,15.9,20,0.39
+15,chandigarh,Chandigarh,Chandigarh,North,30.7333,76.7794,1745,1491,21.27,Mar,Jan,-6.2,39.1,27.7,32,0.31
+16,mumbai,Mumbai,Maharashtra,West,19.076,72.8777,1855,1482,21.15,Mar,Jul,-35.6,39.4,17.2,24,0.82
+17,dehradun,Dehradun,Uttarakhand,North,30.3165,78.0322,1739,1482,21.15,Mar,Jul,-13.1,39.4,27.3,32,0.39
+18,coimbatore,Coimbatore,Tamil Nadu,South,11.0168,76.9558,1950,1481,21.13,Mar,Nov,-8.8,38.7,9.9,16,0.25
+19,pune,Pune,Maharashtra,West,18.5204,73.8567,1868,1477,21.08,Mar,Jul,-27.5,39.3,16.7,24,0.69
+20,nagpur,Nagpur,Maharashtra,Central,21.1458,79.0882,1855,1474,21.03,Mar,Jul,-25.2,43.0,19.0,28,0.73
+21,hyderabad,Hyderabad,Telangana,South,17.385,78.4867,1880,1469,20.96,Mar,Jul,-23.9,40.3,15.6,24,0.63
+22,imphal,Imphal,Manipur,Northeast,24.817,93.9368,1760,1464,20.89,Nov,Jun,-16.1,37.8,22.3,28,0.71
+23,raipur,Raipur,Chhattisgarh,Central,21.2514,81.6296,1839,1462,20.86,Mar,Jul,-24.7,43.1,19.1,28,0.7
+24,kanpur,Kanpur,Uttar Pradesh,North,26.4499,80.3319,1768,1457,20.79,Mar,Aug,-16.7,41.1,23.8,28,0.44
+25,tiruchirappalli,Tiruchirappalli,Tamil Nadu,South,10.7905,78.7047,1953,1451,20.71,Mar,Nov,-1.9,42.8,9.7,12,0.11
+26,port_blair,Port Blair,Andaman and Nicobar,Island,11.6234,92.7265,1887,1451,20.7,Mar,Jul,-17.9,37.9,10.5,16,0.54
+27,lucknow,Lucknow,Uttar Pradesh,North,26.8467,80.9462,1740,1442,20.58,Mar,Jun,-17.9,40.5,24.2,32,0.47
+28,varanasi,Varanasi,Uttar Pradesh,North,25.3176,82.9739,1758,1440,20.55,Mar,Jun,-19.6,41.2,22.8,28,0.52
+29,madurai,Madurai,Tamil Nadu,South,9.9252,78.1198,1946,1438,20.52,Mar,Nov,-7.8,43.9,8.9,12,0.21
+30,bhubaneswar,Bhubaneswar,Odisha,East,20.2961,85.8245,1785,1411,20.14,Mar,Aug,-20.0,41.2,18.3,24,0.5
+31,thiruvananthapuram,Thiruvananthapuram,Kerala,South,8.5241,76.9366,1863,1407,20.08,Mar,May,-11.5,38.9,7.7,12,0.4
+32,patna,Patna,Bihar,East,25.5941,85.1376,1703,1403,20.02,Mar,Sep,-17.7,39.7,23.0,28,0.47
+33,mangalore,Mangaluru,Karnataka,South,12.9141,74.856,1766,1370,19.55,Mar,Jul,-31.3,38.6,11.6,20,1.11
+34,kochi,Kochi,Kerala,South,9.9312,76.2673,1794,1370,19.55,Mar,Jun,-21.7,38.6,8.9,16,0.77
+35,kolkata,Kolkata,West Bengal,East,22.5726,88.3639,1679,1357,19.36,Mar,Jun,-20.9,40.0,20.3,28,0.61
+36,guwahati,Guwahati,Assam,Northeast,26.1445,91.7362,1588,1323,18.89,Nov,Jun,-13.4,38.9,23.5,32,0.67

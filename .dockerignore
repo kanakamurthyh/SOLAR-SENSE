@@ -1,0 +1,9 @@
+.git
+.backup
+cache
+**/__pycache__
+**/.DS_Store
+data/india_pvgis_hourly.csv
+data/india_openmeteo_hourly_*.csv
+data/training_set.parquet
+notebooks
